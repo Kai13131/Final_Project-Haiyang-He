@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3283849153459043888}
   - component: {fileID: 2758648749666604680}
   m_Layer: 0
-  m_Name: SnakePrefabs
+  m_Name: SnakeHead
   m_TagString: Snake
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  SnakePrefab: {fileID: 5177428338500134129}
+  snakeBodyPrefabs: {fileID: 0}
   snakeParts: []
 --- !u!50 &-3283849153459043888
 Rigidbody2D:

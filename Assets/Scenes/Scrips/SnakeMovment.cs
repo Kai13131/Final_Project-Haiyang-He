@@ -5,8 +5,7 @@ using System.Collections.Generic;
 public class SnakeMovment : MonoBehaviour
 {
     public float speed = 10f;
-    public GameObject SnakePrefab;
-
+    public GameObject snakeBodyPrefabs;
     public List<GameObject> snakeParts = new List<GameObject>();
     Vector3 inputDir = new Vector3(1, 0, 0);
 
@@ -72,7 +71,7 @@ public class SnakeMovment : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Snake"))
+        if (collision.gameObject.CompareTag("SnakeBody"))
         {
             Die();
         }
@@ -80,7 +79,6 @@ public class SnakeMovment : MonoBehaviour
         if(collision.gameObject.CompareTag("Apple"))
         {
             SnakeGrow();
-            
         }
     }
 
@@ -92,9 +90,8 @@ public class SnakeMovment : MonoBehaviour
     void SnakeGrow()
     {
         GameObject newPart;
-        Vector3 newPartPosition = snakeParts[snakeParts.Count - 1].transform.position / 2;
-        newPart = Instantiate(SnakePrefab, newPartPosition, Quaternion.identity);
+        Vector3 newPartPosition = -inputDir + transform.position;
+        newPart = Instantiate(snakeBodyPrefabs, newPartPosition, Quaternion.identity);
         snakeParts.Add(newPart);
-
     }
 }
