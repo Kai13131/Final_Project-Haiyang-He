@@ -102,8 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e2ead59c35ad7d49b1edc1cb0a8a7e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeHead: {fileID: 5177428338500134129, guid: 5038eff780c21e24bb79aeeb2959de74, type: 3}
+  snakeHead: {fileID: 4470393221871946443, guid: 5038eff780c21e24bb79aeeb2959de74, type: 3}
   speed: 3
+  mag: 0.5
 --- !u!61 &-7593446190025109690
 BoxCollider2D:
   m_ObjectHideFlags: 0

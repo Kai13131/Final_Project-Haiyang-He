@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 public class SnakeMovment : MonoBehaviour
 {
-    public float speed = 10f;
-    public GameObject snakeBodyPrefabs;
-    public List<GameObject> snakeParts = new List<GameObject>();
+    public float speed = 3f;
+
     Vector3 inputDir = new Vector3(1, 0, 0);
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,7 +17,7 @@ public class SnakeMovment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(transform.position);
 
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
@@ -69,29 +68,5 @@ public class SnakeMovment : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("SnakeBody"))
-        {
-            Die();
-        }
-
-        if(collision.gameObject.CompareTag("Apple"))
-        {
-            SnakeGrow();
-        }
-    }
-
-    void Die()
-    {
-        Destroy(gameObject);
-    }
-
-    void SnakeGrow()
-    {
-        GameObject newPart;
-        Vector3 newPartPosition = -inputDir + transform.position;
-        newPart = Instantiate(snakeBodyPrefabs, newPartPosition, Quaternion.identity);
-        snakeParts.Add(newPart);
-    }
+    
 }

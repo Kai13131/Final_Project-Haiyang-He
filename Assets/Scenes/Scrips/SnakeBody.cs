@@ -4,7 +4,7 @@ public class SnakeBody : MonoBehaviour
 {
     public GameObject snakeHead;
     public float speed = 3.0f;
-    public float mag = 0.01f;
+    public float mag = 0.5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
