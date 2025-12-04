@@ -11,6 +11,9 @@ public class SnakeHead : MonoBehaviour
 
     public List<Vector3> positionHistory = new List<Vector3>();
 
+    bool canHitHead = false;
+    Vector3 nextPosition = Vector3.zero;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,16 +30,30 @@ public class SnakeHead : MonoBehaviour
         {
             Vector3 targetPosition = positionHistory[(int)((i + 1) * distanceBetweenParts * 50)];
             bodyParts[i].position = targetPosition;
+            nextPosition = bodyParts[i].position;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("SnakeBody"))
+        for(int i = 0; i < positionHistory.Count; i++)
         {
-            
+            if (positionHistory[i] == nextPosition)
+            {
+                canHitHead = true;
+            }
+            else
+            {
+                canHitHead = false;
+            }
         }
-
+        
+        if (!canHitHead && collision.gameObject.CompareTag("SnakeBody"))
+        {
+            //Die();
+        }
+        
+        
         if (collision.gameObject.CompareTag("Apple"))
         {
             SnakeGrow();
