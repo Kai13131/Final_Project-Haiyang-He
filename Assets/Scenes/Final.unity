@@ -448,7 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snakeBodyPrefabs: {fileID: 1104267225553984777, guid: 36cb68485c5b49647ad2a01e1f9b3c31, type: 3}
   bodyParts: []
-  distanceBetweenParts: 1
+  distanceBetweenParts: 0.1
   positionHistory: []
 --- !u!212 &917206886
 SpriteRenderer:
@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f29300410834a844faf7c7a19e9821d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.5
+  moveTime: 0.2
 --- !u!1001 &966934333
 PrefabInstance:
   m_ObjectHideFlags: 0

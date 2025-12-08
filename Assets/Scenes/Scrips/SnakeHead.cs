@@ -13,18 +13,18 @@ public class SnakeHead : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-   
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         positionHistory.Insert(0, transform.position);
+
         for (int i = 0;  i < bodyParts.Count; i++)
         {
             int index = Mathf.Min((int)((i + 1) * distanceBetweenParts * 100), positionHistory.Count - 1);
-            Vector3 targetPosition = positionHistory[index];
+            Vector3 targetPosition = positionHistory[index * 20];
             bodyParts[i].position = targetPosition;
         }
     }
@@ -37,7 +37,7 @@ public class SnakeHead : MonoBehaviour
         {
             if(bodyParts.Count > 5)
             {
-                Die();
+                //Die();
             }
         }
         

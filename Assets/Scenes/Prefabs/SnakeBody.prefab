@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4781985696160041364}
   - component: {fileID: 176349101850114496}
-  - component: {fileID: 4820955355374117223}
   - component: {fileID: -7593446190025109690}
   - component: {fileID: -5769550439208655138}
   m_Layer: 0
@@ -90,21 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4820955355374117223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1104267225553984777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e2ead59c35ad7d49b1edc1cb0a8a7e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snakeHead: {fileID: 4470393221871946443, guid: 5038eff780c21e24bb79aeeb2959de74, type: 3}
-  speed: 3
-  mag: 0.5
 --- !u!61 &-7593446190025109690
 BoxCollider2D:
   m_ObjectHideFlags: 0
