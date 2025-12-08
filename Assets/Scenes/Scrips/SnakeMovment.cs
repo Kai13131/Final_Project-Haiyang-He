@@ -1,10 +1,12 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading;
 
 public class SnakeMovment : MonoBehaviour
 {
-    public float speed = 3f;
+    public float moveTime = 0.2f;
+    private float timer;
 
     Vector3 inputDir = new Vector3(1, 0, 0);
 
@@ -17,39 +19,39 @@ public class SnakeMovment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Movement();
+    }
 
-        if (Input.GetKeyUp(KeyCode.UpArrow))
+    void FixedUpdate()
+    {
+        timer += Time.fixedDeltaTime;
+        if (timer >= moveTime)
         {
-            if(inputDir.y != -1)
-            {
-                inputDir = new Vector3(0, 1, 0);
-            }
+            timer = 0f;
+            Move();
         }
-        if (Input.GetKeyUp(KeyCode.DownArrow))
+    }
+
+    void Movement()
+    {
+        if (Input.GetKeyUp(KeyCode.UpArrow) && inputDir.y != -1)
         {
-            if(inputDir.y != 1)
-            {
-                inputDir = new Vector3(0, -1, 0);
-            }     
+            inputDir = new Vector3(0, 1, 0);
         }
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetKeyUp(KeyCode.DownArrow) && inputDir.y != 1)
         {
-            if(inputDir.x != 1)
-            {
-                inputDir = new Vector3(-1, 0, 0);
-            }
+            inputDir = new Vector3(0, -1, 0);
         }
-        if (Input.GetKeyUp(KeyCode.RightArrow))
+        if (Input.GetKeyUp(KeyCode.LeftArrow) && inputDir.x != 1)
         {
-            if(inputDir.x != -1)
-            {
-                inputDir = new Vector3(1, 0, 0);
-            }
+            inputDir = new Vector3(-1, 0, 0);
+        }
+        if (Input.GetKeyUp(KeyCode.RightArrow) && inputDir.x != -1)
+        {
+            inputDir = new Vector3(1, 0, 0);
         }
 
-        transform.position += inputDir * speed * Time.deltaTime;
-
-        if(transform.position.x > 9.5f)
+        if (transform.position.x > 9.5f)
         {
             transform.position = new Vector3(-9.5f, transform.position.y, 0);
         }
@@ -59,13 +61,16 @@ public class SnakeMovment : MonoBehaviour
         }
         if (transform.position.y > 5f)
         {
-            transform.position = new Vector3(transform.position.x, -5f,  0);
+            transform.position = new Vector3(transform.position.x, -5f, 0);
         }
         if (transform.position.y < -5f)
         {
-            transform.position = new Vector3(transform.position.x, 5f,  0);
+            transform.position = new Vector3(transform.position.x, 5f, 0);
         }
     }
 
-    
+    void Move()
+    {
+        transform.position = new Vector3(Mathf.Round(transform.position.x) + inputDir.x,Mathf.Round(transform.position.y) + inputDir.y,0);
+    }
 }
