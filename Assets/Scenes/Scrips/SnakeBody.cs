@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SnakeBody : MonoBehaviour
 {
-    public GameObject snakeHead;
-    public float speed = 3.0f;
-    public float mag = 0.5f;
+    public GameObject head;
+    public List<Vector3> positionHistory = new List<Vector3>();
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,6 +15,7 @@ public class SnakeBody : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, snakeHead.transform.position, mag * Time.deltaTime);
+        
     }
+
 }

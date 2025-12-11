@@ -7,7 +7,8 @@ TagManager:
   - Snake
   - Apple
   - SnakeBody
-  - SnakeTail
+  - Wall
+  - Tail
   layers:
   - Default
   - TransparentFX
