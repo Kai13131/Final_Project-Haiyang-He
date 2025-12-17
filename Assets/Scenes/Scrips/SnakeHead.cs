@@ -15,7 +15,8 @@ public class SnakeHead : MonoBehaviour
     public float distanceBetweenParts = 1f;
 
     public List<Vector3> positionHistory = new List<Vector3>();
-    public List<Vector3> lastBodyPartPositionHistory = new List<Vector3>();
+    public List<Vector3> tailPositionHistory = new List<Vector3>();
+    public List<Quaternion> rotationHistory = new List<Quaternion>();
 
     Vector3 inputDir = Vector3.right;
 
@@ -49,22 +50,23 @@ public class SnakeHead : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.UpArrow) && inputDir.y != -1)
         {
             inputDir = Vector3.up;
-            transform.up = inputDir;
+            transform.rotation = Quaternion.Euler(0, 0, 180);
         }
         if (Input.GetKeyUp(KeyCode.DownArrow) && inputDir.y != 1)
         {
             inputDir = Vector3.down;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         if (Input.GetKeyUp(KeyCode.LeftArrow) && inputDir.x != 1)
         {
             inputDir = Vector3.left;
+            transform.rotation = Quaternion.Euler(0, 0, 270);
         }
         if (Input.GetKeyUp(KeyCode.RightArrow) && inputDir.x != -1)
         {
             inputDir = Vector3.right;
+            transform.rotation = Quaternion.Euler(0, 0, 90);
         }
-
-        
     }
 
     void handleWarpAround()
@@ -86,12 +88,14 @@ public class SnakeHead : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 5f, 0);
         }
     }
+
     void Move()
     {
         positionHistory.Insert(0, transform.position);
+        rotationHistory.Insert(0, transform.rotation);
         if (bodyParts.Count > 0)
         {
-            lastBodyPartPositionHistory.Insert(0, bodyParts[bodyParts.Count - 1].position);
+            tailPositionHistory.Insert(0, bodyParts[bodyParts.Count - 1].position);
         }
         transform.position = new Vector3(
                     Mathf.Round(transform.position.x) + inputDir.x,
@@ -103,6 +107,7 @@ public class SnakeHead : MonoBehaviour
         {
             int index = Mathf.Clamp(i + 1, 0, positionHistory.Count - 1);
             bodyParts[i].position = positionHistory[index];
+            bodyParts[i].rotation = rotationHistory[index];
         }
         firstBody();
         moveTail();
@@ -112,6 +117,7 @@ public class SnakeHead : MonoBehaviour
     {
         int index = Mathf.Clamp(0, 0, positionHistory.Count - 1);
         Body1.transform.position = positionHistory[index];
+        Body1.transform.rotation = rotationHistory[index];
     }
 
     void moveTail()
@@ -123,10 +129,13 @@ public class SnakeHead : MonoBehaviour
         }
         else
         {
-            index = Mathf.Clamp(0, 0, lastBodyPartPositionHistory.Count - 1);
-            Tail.transform.position = lastBodyPartPositionHistory[index];
+            index = Mathf.Clamp(0, 0, tailPositionHistory.Count - 1);
+            Tail.transform.position = tailPositionHistory[index];
+            Tail.transform.rotation = rotationHistory[index];
         }
     }
+
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("SnakeBody") 
