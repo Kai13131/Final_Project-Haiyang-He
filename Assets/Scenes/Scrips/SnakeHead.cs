@@ -160,7 +160,7 @@ public class SnakeHead : MonoBehaviour
     void updateScore()
     {
         score += 1;
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Apple: " + score;
     }
 
     void Die()
