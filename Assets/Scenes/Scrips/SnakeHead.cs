@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UIElements;
 
 public class SnakeHead : MonoBehaviour
@@ -8,9 +10,14 @@ public class SnakeHead : MonoBehaviour
     public GameObject Body1;
     public GameObject Tail;
 
+    //public Sprite coner_Up_Right;
+    //public Sprite coner_Up_Left;
+    //public Sprite coner_Down_Right;
+    //public Sprite coner_Down_Left;
+
     public float moveTime = 0.2f;
     private float timer;
-    public List<Transform> bodyParts = new List<Transform>();
+    public List<GameObject> bodyParts = new List<GameObject>();
 
     public float distanceBetweenParts = 1f;
 
@@ -18,22 +25,31 @@ public class SnakeHead : MonoBehaviour
     public List<Vector3> tailPositionHistory = new List<Vector3>();
     public List<Quaternion> rotationHistory = new List<Quaternion>();
 
-    Vector3 inputDir = Vector3.right;
+    Quaternion up = Quaternion.Euler(0, 0, 180);
+    Quaternion down = Quaternion.Euler(0, 0, 0);
+    Quaternion left = Quaternion.Euler(0, 0, 270);
+    Quaternion right = Quaternion.Euler(0, 0, 90);
 
+    public AudioSource source;
+    public AudioClip eatSound;
+
+    public TextMeshProUGUI scoreText;
+    private int score = 0;
+    public TextMeshProUGUI gameOverText;
+
+    Vector3 inputDir = Vector3.right;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-    }
-
-    
+        source = GetComponent<AudioSource>();
+    }    
 
     // Update is called once per frame
     void Update()
     {
         Movement();
-
-        
+        handleWarpAround();
     }
     void FixedUpdate()
     {
@@ -50,22 +66,22 @@ public class SnakeHead : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.UpArrow) && inputDir.y != -1)
         {
             inputDir = Vector3.up;
-            transform.rotation = Quaternion.Euler(0, 0, 180);
+            transform.rotation = up;
         }
         if (Input.GetKeyUp(KeyCode.DownArrow) && inputDir.y != 1)
         {
             inputDir = Vector3.down;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = down;
         }
         if (Input.GetKeyUp(KeyCode.LeftArrow) && inputDir.x != 1)
         {
             inputDir = Vector3.left;
-            transform.rotation = Quaternion.Euler(0, 0, 270);
+            transform.rotation = left;
         }
         if (Input.GetKeyUp(KeyCode.RightArrow) && inputDir.x != -1)
         {
             inputDir = Vector3.right;
-            transform.rotation = Quaternion.Euler(0, 0, 90);
+            transform.rotation = right;
         }
     }
 
@@ -95,22 +111,21 @@ public class SnakeHead : MonoBehaviour
         rotationHistory.Insert(0, transform.rotation);
         if (bodyParts.Count > 0)
         {
-            tailPositionHistory.Insert(0, bodyParts[bodyParts.Count - 1].position);
+            tailPositionHistory.Insert(0, bodyParts[bodyParts.Count - 1].transform.position);
         }
         transform.position = new Vector3(
                     Mathf.Round(transform.position.x) + inputDir.x,
                     Mathf.Round(transform.position.y) + inputDir.y, 0);
 
-        handleWarpAround();
-
+        firstBody();
+        
         for(int i = 0; i < bodyParts.Count; i++)
         {
             int index = Mathf.Clamp(i + 1, 0, positionHistory.Count - 1);
-            bodyParts[i].position = positionHistory[index];
-            bodyParts[i].rotation = rotationHistory[index];
+            bodyParts[i].transform.position = positionHistory[index];
+            bodyParts[i].transform.rotation = rotationHistory[index];
+
         }
-        firstBody();
-        moveTail();
     }
 
     void firstBody()
@@ -120,22 +135,11 @@ public class SnakeHead : MonoBehaviour
         Body1.transform.rotation = rotationHistory[index];
     }
 
-    void moveTail()
+    void EatSound()
     {
-        int index = Mathf.Clamp(1, 0, positionHistory.Count - 1);
-        if(bodyParts.Count <= 0)
-        {
-            Tail.transform.position = positionHistory[index];
-        }
-        else
-        {
-            index = Mathf.Clamp(0, 0, tailPositionHistory.Count - 1);
-            Tail.transform.position = tailPositionHistory[index];
-            Tail.transform.rotation = rotationHistory[index];
-        }
+        source.PlayOneShot(eatSound);
     }
 
-    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("SnakeBody") 
@@ -147,18 +151,27 @@ public class SnakeHead : MonoBehaviour
                 
         if (collision.CompareTag("Apple"))
         {
+            EatSound();
+            updateScore();
             SnakeGrow();
         }
     }
 
+    void updateScore()
+    {
+        score += 1;
+        scoreText.text = "Score: " + score;
+    }
+
     void Die()
     {
+        GameOver();
         Destroy(gameObject);
     }
 
     void GameOver()
     {
-        
+        gameOverText.gameObject.SetActive(true);
     }
 
     void SnakeGrow()
@@ -166,12 +179,67 @@ public class SnakeHead : MonoBehaviour
         GameObject newBody = Instantiate(snakeBodyPrefabs);
         if(bodyParts.Count > 0)
         {
-            newBody.transform.position = bodyParts[bodyParts.Count - 1].position;
+            newBody.transform.position = bodyParts[bodyParts.Count - 1].transform.position;
         }
         else
         {
             newBody.transform.position = Body1.transform.position;
         }
-        bodyParts.Add(newBody.transform);
+        bodyParts.Add(newBody.gameObject);
     }
+
+    //void conerPart()
+    //{
+    //    if(bodyParts.Count > 0)
+    //    {
+    //        for (int i = 0; i < bodyParts.Count; i++)
+    //        {
+    //            if (bodyParts[i].transform.rotation == right && bodyParts[i + 1].transform.rotation == up)
+    //            {
+    //                bodyParts[i].GetComponent<SpriteRenderer>().sprite = coner_Up_Right;
+    //                return;
+    //            }
+    //        }
+    //    }
+    //    
+    //}
+
+    //void moveTail()
+    //{
+    //    int index = Mathf.Clamp(1, 0, positionHistory.Count - 1);
+    //    if(bodyParts.Count <= 0)
+    //    {
+    //        Tail.transform.position = positionHistory[index];
+    //    }
+    //    else
+    //    {
+    //        index = Mathf.Clamp(0, 0, tailPositionHistory.Count - 1);
+    //        Tail.transform.position = tailPositionHistory[index];
+    //        tailRotation(index);
+    //    }
+    //}
+
+    //void tailRotation(int index)
+    //{
+    //    if (inputDir == Vector3.up)
+    //    {
+    //        rotationHistory[index] = Quaternion.Euler(0,0,0);
+    //        Tail.transform.rotation = rotationHistory[index];
+    //    }
+    //    if (inputDir == Vector3.down)
+    //    {
+    //        rotationHistory[index] = Quaternion.Euler(0, 0, 180);
+    //        Tail.transform.rotation = rotationHistory[index];
+    //    }
+    //    if (inputDir == Vector3.left)
+    //    {
+    //        rotationHistory[index] = Quaternion.Euler(0, 0, 90);
+    //        Tail.transform.rotation = rotationHistory[index];
+    //    }
+    //    if (inputDir == Vector3.right)
+    //    {
+    //        rotationHistory[index] = Quaternion.Euler(0, 0, 270);
+    //        Tail.transform.rotation = rotationHistory[index];
+    //    }
+    //}
 }
